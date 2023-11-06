@@ -61,7 +61,7 @@
 	draggable="true"
 	style="opacity: {$dragging && $dragging.element.id === uid
 		? 0
-		: 100}; touch-action: none; width: fit-content; height: fit-content;"
+		: 100}; touch-action: none;"
 >
 	<slot />
 </div>
