@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { dragging } from '$lib/stores/dragging';
-
 	import { onMount } from 'svelte';
-	import { getMousePos } from '$lib/utils';
+
 	import { dragListClassName, draggableClassName } from '$lib';
-	import type { Collision } from '$lib/types';
+	import { getMousePos } from '$lib/utils';
+	import { dragging } from '$lib/stores/dragging';
 	import { lists } from '$lib/stores/lists';
+
+	import type { Collision } from '$lib/types';
 
 	export let swapOnCollision = true;
 	export let onCollision = (drag: Collision, hit: Collision) => {};

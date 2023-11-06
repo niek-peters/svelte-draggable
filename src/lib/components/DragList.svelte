@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { getStores } from '$app/stores';
 	import { dragListClassName } from '$lib';
+	import Draggable from '$lib/components/Draggable.svelte';
 	import { dragging } from '$lib/stores/dragging';
-	import { lists, type List } from '$lib/stores/lists';
-	import Draggable from './Draggable.svelte';
+	import { lists } from '$lib/stores/lists';
+
+	import type { List } from '$lib/types';
 
 	export let list: List<any>;
 	const { uid, store } = list;

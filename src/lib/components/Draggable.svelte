@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { draggableClassName } from '$lib';
-	import { dragging } from '$lib/stores/dragging';
 	import { drag, end, start } from '$lib/utils';
+	import { dragging } from '$lib/stores/dragging';
 
 	export let uid = crypto.randomUUID();
 	export let group_uid: string = 'default';

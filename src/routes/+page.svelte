@@ -1,10 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { writable } from 'svelte/store';
-	import { newList } from '$lib/stores/lists';
-	import DragList from '$lib/components/DragList.svelte';
-	import DragRoot from '$lib/components/DragRoot.svelte';
-	import { dragging } from '$lib/stores/dragging';
+	import { DragList, DragRoot, dragging, newList } from '$lib';
 
 	const list1 = newList(
 		'bist',

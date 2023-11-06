@@ -1,38 +1,64 @@
-# create-svelte
+# Svelte Draggable
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+A simple, typesafe library that makes it trivial to create lists of draggable elements.
 
-## Creating a project
+```svelte
+<script lang="ts">
+	import { writable } from 'svelte/store';
+	import { DragList, DragRoot, newList } from '$lib';
 
-If you're seeing this, you've probably already done this step. Congrats!
+	const gamesRanking = newList(
+		'games',
+		writable([
+			{ uid: crypto.randomUUID(), name: 'Minecraft' },
+			{ uid: crypto.randomUUID(), name: 'Subnautica' },
+			{ uid: crypto.randomUUID(), name: 'Satisfactory' }
+		])
+	);
+</script>
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+<DragList let:index list={gamesRanking}>
+	{@const game = gamesRanking.get(index)}
+	<p>{game.name}</p>
+</DragList>
 
-# create a new project in my-app
-npm create svelte@latest my-app
+<DragRoot />
 ```
 
-## Developing
+## Features
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Drag elements between lists by setting targets
 
-```bash
-npm run dev
+```svelte
+<!-- Now elements can be dragged from list 1 -> list 2, but not back -->
+<DragList ... list={list1} targets={['list2']}>...</DragList>
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+<DragList ... list={list2}>...</DragList>
 ```
 
-## Building
+Disable inner list reordering
 
-To create a production version of your app:
-
-```bash
-npm run build
+```svelte
+<DragList ... inner={false}>...</DragList>
 ```
 
-You can preview the production build with `npm run preview`.
+Add mobile friendly buttons for dragging/removing
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+```svelte
+<DragList ...>
+	<button name="drag">Drag here!</button>
+	<button name="delete">Delete</button>
+</DragList>
+```
+
+## Install
+
+SvelteKit:
+`npm i -D @niek-peters/svelte-draggable`
+
+Svelte:
+`npm i @niek-peters/svelte-draggable`
+
+## Notes
+
+- This package is still **highly experimental** and will probably change a ton in the near future. Use at your own risk!

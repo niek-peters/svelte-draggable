@@ -1,31 +1,9 @@
-import { dragListClassName } from '$lib';
-import { getMousePos } from '$lib/utils';
 import { writable } from 'svelte/store';
 
-export type Dragging =
-	| {
-		element: HTMLElement;
-		dimensions: {
-			width: number;
-			height: number;
-		};
-		pos: {
-			x: number;
-			y: number;
-		};
-		offset: {
-			x: number;
-			y: number;
-		};
-		scrolling:
-		| {
-			up: number;
-			left: number;
-		}
-		| false;
-		targets: HTMLElement[];
-	}
-	| false;
+import { dragListClassName } from '$lib';
+import { getMousePos } from '$lib/utils';
+
+import type { Dragging } from '$lib/types';
 
 export const dragging = (() => {
 	const store = writable<Dragging>(false);

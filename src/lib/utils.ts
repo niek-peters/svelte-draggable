@@ -1,5 +1,6 @@
 import { get } from 'svelte/store';
-import { dragging } from './stores/dragging';
+
+import { dragging } from '$lib/stores/dragging';
 
 export function start(e: DragEvent | TouchEvent, el?: HTMLElement) {
 	if (e instanceof DragEvent) {
