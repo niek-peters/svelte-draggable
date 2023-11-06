@@ -1,4 +1,4 @@
-# Svelte Draggable
+# @niek-peters/svelte-draggable
 
 A simple, typesafe library that makes it trivial to create lists of draggable elements.
 
