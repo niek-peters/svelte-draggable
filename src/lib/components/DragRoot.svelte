@@ -7,7 +7,10 @@
 	import type { Collision } from '$lib/types';
 	import { lists } from '$lib/stores/lists';
 
-	export let onCollision: (drag: Collision, target: Collision) => void = (drag, hit) => {
+	export let swapOnCollision = true;
+	export let onCollision = (drag: Collision, hit: Collision) => {};
+
+	function swap(drag: Collision, hit: Collision) {
 		const [dragList, dragIndex] = lists.getIndex(drag.group_uid, drag.uid);
 		const [hitList, hitIndex] = lists.getIndex(hit.group_uid, hit.uid);
 
@@ -45,7 +48,7 @@
 				return store;
 			});
 
-			return;
+			return true;
 		} else if (
 			dragList === undefined ||
 			dragIndex === undefined ||
@@ -108,7 +111,9 @@
 				return store;
 			});
 		}
-	};
+
+		return true;
+	}
 
 	onMount(() => {
 		const move = (e: TouchEvent | DragEvent) => {
@@ -118,7 +123,7 @@
 			if (pos.x === 0 && pos.y === 0) return;
 			let element = document.elementFromPoint(pos.x, pos.y);
 
-			// get parent element if element is a child of a draggable
+			// get parent element if element is a child of a draggable or list
 			while (
 				element !== null &&
 				!element.classList.contains(draggableClassName) &&
@@ -131,18 +136,22 @@
 					element === target &&
 					($dragging.element.id === target.id ? dragging.onDropSet() : true)
 				) {
-					onCollision(
-						{
-							uid: $dragging.element.id,
-							group_uid: $dragging.element.dataset['group_uid'] || 'default',
-							element: $dragging.element
-						},
-						{
-							uid: target.id,
-							group_uid: target.dataset['group_uid'] || 'default',
-							element: target
-						}
-					);
+					const drag = {
+						uid: $dragging.element.id,
+						group_uid: $dragging.element.dataset['group_uid'] || 'default',
+						element: $dragging.element
+					};
+
+					const hit = {
+						uid: target.id,
+						group_uid: target.dataset['group_uid'] || 'default',
+						element: target
+					};
+
+					if (swapOnCollision) {
+						const change = swap(drag, hit);
+						if (change) onCollision(drag, hit);
+					} else onCollision(drag, hit);
 
 					break;
 				}
