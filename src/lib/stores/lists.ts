@@ -12,7 +12,7 @@ export type Lists = {
 	subscribe: Writable<List<any>[]>['subscribe'];
 	add: (newList: List<any>) => void;
 	getStore: (uid: string) => List<any> | undefined;
-	getIndex: (group_uid: string, uid: string) => [List<unknown>, number | undefined] | undefined;
+	getIndex: (group_uid: string, uid: string) => [List<unknown> | undefined, number | undefined];
 };
 
 export const lists = initLists();
@@ -51,7 +51,7 @@ function initLists(): Lists {
 		getStore: (uid: string) => get(store).find((l) => l.uid === uid),
 		getIndex: (group_uid: string, uid: string) => {
 			const list = get(store).find((l) => l.uid === group_uid);
-			if (list === undefined) return undefined;
+			if (list === undefined) return [undefined, undefined];
 
 			return [list, list.getIndex(uid)];
 		}

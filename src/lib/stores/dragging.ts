@@ -1,34 +1,37 @@
+import { dragListClassName } from '$lib';
 import { getMousePos } from '$lib/utils';
 import { writable } from 'svelte/store';
 
 export type Dragging =
 	| {
-			element: HTMLElement;
-			dimensions: {
-				width: number;
-				height: number;
-			};
-			pos: {
-				x: number;
-				y: number;
-			};
-			offset: {
-				x: number;
-				y: number;
-			};
-			scrolling:
-				| {
-						up: number;
-						left: number;
-				  }
-				| false;
-			targets: HTMLElement[];
-	  }
+		element: HTMLElement;
+		dimensions: {
+			width: number;
+			height: number;
+		};
+		pos: {
+			x: number;
+			y: number;
+		};
+		offset: {
+			x: number;
+			y: number;
+		};
+		scrolling:
+		| {
+			up: number;
+			left: number;
+		}
+		| false;
+		targets: HTMLElement[];
+	}
 	| false;
 
 export const dragging = (() => {
 	const store = writable<Dragging>(false);
 	let observer: MutationObserver | undefined;
+
+	let onDropFunction: (() => void) | undefined = undefined;
 
 	return {
 		subscribe: store.subscribe,
@@ -61,10 +64,16 @@ export const dragging = (() => {
 			let targets =
 				dataset['inner'] === 'true'
 					? Array.from<HTMLElement>(
-							document.querySelectorAll(`[data-group_uid="${dataset['group_uid']}"]`)
-					  )
+						document.querySelectorAll(`[data-group_uid="${dataset['group_uid']}"]`)
+					)
 					: [];
+
 			const data_targets = dataset['targets']?.split(',');
+
+			targets = targets.concat(Array.from<HTMLElement>(
+				document.querySelectorAll(`.${dragListClassName}`)
+			).filter((el) => data_targets?.includes(el.id)))
+
 			if (data_targets !== undefined) {
 				for (const group of data_targets) {
 					const group_members = Array.from<HTMLElement>(
@@ -75,7 +84,7 @@ export const dragging = (() => {
 				}
 			}
 
-			targets = targets.filter((target) => target.id !== element.id);
+			// targets = targets.filter((target) => target.id !== element.id);
 
 			store.set({
 				element,
@@ -94,6 +103,16 @@ export const dragging = (() => {
 				scrolling: false,
 				targets
 			});
-		}
+		},
+		onDrop: (f: (() => void) | undefined) => {
+			onDropFunction = f;
+		},
+		drop: () => {
+			if (onDropFunction === undefined) return;
+
+			onDropFunction();
+			onDropFunction = undefined;
+		},
+		onDropSet: () => onDropFunction !== undefined
 	};
 })();

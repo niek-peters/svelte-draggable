@@ -1,25 +1,13 @@
 <script lang="ts">
 	import { draggableClassName } from '$lib';
-	import { lastCollision } from '$lib/stores/collision';
 	import { dragging } from '$lib/stores/dragging';
-	import { hover } from '$lib/stores/hover';
 	import { drag, end, start } from '$lib/utils';
 
-	const uid = crypto.randomUUID();
+	export let uid = crypto.randomUUID();
 	export let group_uid: string = 'default';
-
-	export let hoverStyle: string | undefined = undefined;
-	export let hoverClass: string | undefined = undefined;
 
 	export let inner = true;
 	export let targets: string[] = [];
-
-	function setHover() {
-		$hover = {
-			style: hoverStyle,
-			class: hoverClass
-		};
-	}
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -29,14 +17,8 @@
 	data-group_uid={group_uid}
 	data-inner={inner}
 	data-targets={targets}
-	on:dragstart={(e) => {
-		setHover();
-		start(e);
-	}}
-	on:touchstart={(e) => {
-		setHover();
-		start(e);
-	}}
+	on:dragstart={start}
+	on:touchstart={start}
 	on:drag={drag}
 	on:touchmove={drag}
 	on:dragend={end}
@@ -53,7 +35,7 @@
 	draggable="true"
 	style="opacity: {$dragging && $dragging.element.id === uid
 		? 0
-		: 100}; touch-action: none; width: fit-content; height: fit-content"
+		: 100}; touch-action: none; width: fit-content; height: fit-content;"
 >
 	<slot />
 </div>

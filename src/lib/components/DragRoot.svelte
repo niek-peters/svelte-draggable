@@ -1,44 +1,34 @@
 <script lang="ts">
-	import { targets } from '$lib/stores/targets';
 	import { dragging } from '$lib/stores/dragging';
-	import { hover } from '$lib/stores/hover';
 
 	import { onMount } from 'svelte';
 	import { getMousePos } from '$lib/utils';
-	import { draggableClassName } from '$lib';
+	import { dragListClassName, draggableClassName } from '$lib';
 	import type { Collision } from '$lib/types';
 
 	export let onCollision: (drag: Collision, target: Collision) => void = () => {};
 
-	function simulate_hover(el: HTMLElement) {
-		if ($hover === undefined) return;
-
-		const child = el.children.item(0) as HTMLElement | null;
-		if (!child) return;
-
-		if ($hover.class) child.classList.add($hover.class);
-		if ($hover.style) child.style.cssText += $hover.style;
-	}
-
 	onMount(() => {
-		targets.update();
-
-		let lastTouched: Element | undefined = undefined;
 		const move = (e: TouchEvent | DragEvent) => {
 			if ($dragging === false) return;
 
 			const pos = getMousePos(e);
+			if (pos.x === 0 && pos.y === 0) return;
 			let element = document.elementFromPoint(pos.x, pos.y);
 
 			// get parent element if element is a child of a draggable
-			while (element !== null && !element.classList.contains(draggableClassName))
+			while (
+				element !== null &&
+				!element.classList.contains(draggableClassName) &&
+				!element.classList.contains(dragListClassName)
+			)
 				element = element.parentElement;
 
-			if (element === null || !element.classList.contains(draggableClassName))
-				return (lastTouched = undefined);
-
 			for (const target of $dragging.targets)
-				if (element === target && lastTouched !== target) {
+				if (
+					element === target &&
+					($dragging.element.id === target.id ? dragging.onDropSet() : true)
+				) {
 					onCollision(
 						{
 							uid: $dragging.element.id,
@@ -52,8 +42,6 @@
 						}
 					);
 
-					lastTouched = target;
-
 					break;
 				}
 		};
@@ -65,7 +53,6 @@
 
 {#if $dragging}
 	<div
-		use:simulate_hover
 		style="position: fixed; z-index: 15; width: {$dragging.dimensions.width}px; height: {$dragging
 			.dimensions.height}px; left: {$dragging.pos.x}px; top: {$dragging.pos
 			.y}px; pointer-events: none;"

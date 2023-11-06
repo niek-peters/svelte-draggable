@@ -36,14 +36,14 @@ export function drag(e: DragEvent | TouchEvent) {
 				lastMousePos.y < scrollProximity
 					? -1
 					: lastMousePos.y > window.innerHeight - scrollProximity
-					? 1
-					: 0;
+						? 1
+						: 0;
 			const left =
 				lastMousePos.x < scrollProximity
 					? -1
 					: lastMousePos.x > window.innerWidth - scrollProximity
-					? 1
-					: 0;
+						? 1
+						: 0;
 
 			if (
 				store.scrolling &&
@@ -63,6 +63,7 @@ export function drag(e: DragEvent | TouchEvent) {
 }
 
 export function end() {
+	dragging.drop();
 	dragging.set(false);
 
 	stopScrolling();
