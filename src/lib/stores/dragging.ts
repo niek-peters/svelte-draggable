@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 
 export type Dragging =
 	| {
-			element: Element;
+			element: HTMLElement;
 			dimensions: {
 				width: number;
 				height: number;
@@ -22,7 +22,7 @@ export type Dragging =
 						left: number;
 				  }
 				| false;
-			targets: Element[];
+			targets: HTMLElement[];
 	  }
 	| false;
 
@@ -34,7 +34,7 @@ export const dragging = (() => {
 		subscribe: store.subscribe,
 		update: store.update,
 		set: store.set,
-		bind: (element: Element, e: DragEvent | TouchEvent) => {
+		bind: (element: HTMLElement, e: DragEvent | TouchEvent) => {
 			if (observer !== undefined) observer.disconnect();
 
 			observer = new MutationObserver(() =>
@@ -57,15 +57,17 @@ export const dragging = (() => {
 			const mousePos = getMousePos(e);
 			const { width, height, x, y } = element.getBoundingClientRect();
 
-			const dataset = (element as HTMLElement).dataset;
+			const dataset = element.dataset;
 			let targets =
 				dataset['inner'] === 'true'
-					? Array.from(document.querySelectorAll(`[data-group_uid="${dataset['group_uid']}"]`))
+					? Array.from<HTMLElement>(
+							document.querySelectorAll(`[data-group_uid="${dataset['group_uid']}"]`)
+					  )
 					: [];
 			const data_targets = dataset['targets']?.split(',');
 			if (data_targets !== undefined) {
 				for (const group of data_targets) {
-					const group_members = Array.from(
+					const group_members = Array.from<HTMLElement>(
 						document.querySelectorAll(`[data-group_uid="${group}"]`)
 					);
 

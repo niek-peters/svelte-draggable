@@ -6,8 +6,9 @@
 	import { onMount } from 'svelte';
 	import { getMousePos } from '$lib/utils';
 	import { draggableClassName } from '$lib';
+	import type { Collision } from '$lib/types';
 
-	export let onCollision: (drag: Element, target: Element) => void = () => {};
+	export let onCollision: (drag: Collision, target: Collision) => void = () => {};
 
 	function simulate_hover(el: HTMLElement) {
 		if ($hover === undefined) return;
@@ -38,9 +39,22 @@
 
 			for (const target of $dragging.targets)
 				if (element === target && lastTouched !== target) {
-					onCollision($dragging.element, target);
+					onCollision(
+						{
+							uid: $dragging.element.id,
+							group_uid: $dragging.element.dataset['group_uid'] || 'default',
+							element: $dragging.element
+						},
+						{
+							uid: target.id,
+							group_uid: target.dataset['group_uid'] || 'default',
+							element: target
+						}
+					);
 
 					lastTouched = target;
+
+					break;
 				}
 		};
 

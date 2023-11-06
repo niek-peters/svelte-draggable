@@ -5,14 +5,14 @@ export type List<T> = {
 	uid: string;
 	store: Writable<T[]>;
 	get: (index: number) => T;
-	getIndex: (entry: T) => number | undefined;
+	getIndex: (uid: string) => number | undefined;
 };
 
 export type Lists = {
 	subscribe: Writable<List<any>[]>['subscribe'];
 	add: (newList: List<any>) => void;
 	getStore: (uid: string) => List<any> | undefined;
-	getIndex: (uid: string, entry: any) => number | undefined;
+	getIndex: (group_uid: string, uid: string) => [List<unknown>, number | undefined] | undefined;
 };
 
 export const lists = initLists();
@@ -27,8 +27,8 @@ export function newList<T extends { uid: string }>(uid: string, store: Writable<
 
 			return list[index];
 		},
-		getIndex: (entry: T) => {
-			const index = get(store).indexOf(entry);
+		getIndex: (uid: string) => {
+			const index = get(store).findIndex((entry) => entry.uid === uid);
 			return index === -1 ? undefined : index;
 		}
 	};
@@ -49,11 +49,11 @@ function initLists(): Lists {
 				return stores;
 			}),
 		getStore: (uid: string) => get(store).find((l) => l.uid === uid),
-		getIndex: (uid: string, entry: unknown) => {
-			const list = get(store).find((l) => l.uid === uid);
+		getIndex: (group_uid: string, uid: string) => {
+			const list = get(store).find((l) => l.uid === group_uid);
 			if (list === undefined) return undefined;
 
-			return list.getIndex(entry);
+			return [list, list.getIndex(uid)];
 		}
 	};
 }

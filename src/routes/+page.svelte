@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { writable } from 'svelte/store';
-	import { newList } from '$lib/stores/lists';
+	import { lists, newList } from '$lib/stores/lists';
 	import DragList from '$lib/components/DragList.svelte';
 	import DragRoot from '$lib/components/DragRoot.svelte';
 
@@ -44,4 +44,8 @@
 	</div>
 </main>
 
-<DragRoot onCollision={(drag, hit) => console.log(drag, hit)} />
+<DragRoot
+	onCollision={(drag, hit) => {
+		console.log(lists.getIndex(drag.group_uid, drag.uid));
+	}}
+/>
