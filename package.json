@@ -1,8 +1,12 @@
 {
 	"name": "@niek-peters/svelte-draggable",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"license": "ISC",
 	"private": false,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/niek-peters/svelte-draggable.git"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
