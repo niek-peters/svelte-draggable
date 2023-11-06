@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import { dragging } from './stores/dragging';
 
-export function start(e: DragEvent | TouchEvent) {
+export function start(e: DragEvent | TouchEvent, el?: HTMLElement) {
 	if (e instanceof DragEvent) {
 		const canvas = document.createElement('canvas');
 
@@ -14,7 +14,8 @@ export function start(e: DragEvent | TouchEvent) {
 		canvas.remove();
 	}
 
-	dragging.bind(e.currentTarget as Element, e);
+	if (el === undefined) el = e.currentTarget as HTMLElement;
+	dragging.bind(el, e);
 }
 
 let lastMousePos = { x: 0, y: 0 };

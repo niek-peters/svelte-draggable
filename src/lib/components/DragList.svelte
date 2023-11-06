@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { getStores } from '$app/stores';
 	import { dragListClassName } from '$lib';
 	import { dragging } from '$lib/stores/dragging';
-	import type { List } from '$lib/stores/lists';
+	import { lists, type List } from '$lib/stores/lists';
 	import Draggable from './Draggable.svelte';
 
 	export let list: List<any>;
@@ -12,6 +13,20 @@
 
 	export let inner = true;
 	export let targets: string[] = [];
+
+	function remove(target: HTMLElement) {
+		const id = target.id;
+		const group_uid = target.dataset['group_uid'];
+		if (group_uid === undefined) return;
+
+		const [store, index] = lists.getIndex(group_uid, id);
+		if (store === undefined || index === undefined) return;
+
+		store.store.update((store) => {
+			store.splice(index, 1);
+			return store;
+		});
+	}
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -33,7 +48,7 @@
 	}}
 >
 	{#each $store as entry (entry.uid)}
-		<Draggable group_uid={uid} {inner} {targets} uid={entry.uid}>
+		<Draggable group_uid={uid} {inner} {targets} uid={entry.uid} {remove}>
 			<slot index={$store.indexOf(entry)} />
 		</Draggable>
 	{/each}

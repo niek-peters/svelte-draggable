@@ -5,8 +5,110 @@
 	import { getMousePos } from '$lib/utils';
 	import { dragListClassName, draggableClassName } from '$lib';
 	import type { Collision } from '$lib/types';
+	import { lists } from '$lib/stores/lists';
 
-	export let onCollision: (drag: Collision, target: Collision) => void = () => {};
+	export let onCollision: (drag: Collision, target: Collision) => void = (drag, hit) => {
+		const [dragList, dragIndex] = lists.getIndex(drag.group_uid, drag.uid);
+		const [hitList, hitIndex] = lists.getIndex(hit.group_uid, hit.uid);
+
+		// Outer list collision
+		if (hit.element.classList.contains(dragListClassName)) {
+			if (dragList === undefined || dragIndex === undefined) return;
+
+			const hitList = lists.getStore(hit.element.id);
+			if (hitList === undefined) return;
+
+			// Inter-list collision
+			if (lists.getIndex(hit.group_uid, drag.uid)[1] !== undefined) return;
+
+			dragList.store.update((store) => {
+				const temp = store[dragIndex];
+
+				dragging.drop();
+				dragging.onDrop(() => {
+					dragList.store.update((store) => {
+						store.splice(dragIndex, 1);
+						return store;
+					});
+				});
+
+				hitList.store.update((store) => {
+					if ($dragging === false) return store;
+					$dragging.element.dataset['group_uid'] = hit.element.dataset['group_uid'];
+					$dragging.element.dataset['inner'] = hit.element.dataset['inner'];
+					$dragging.element.dataset['targets'] = hit.element.dataset['targets'];
+
+					store.push(temp);
+					return store;
+				});
+
+				return store;
+			});
+
+			return;
+		} else if (
+			dragList === undefined ||
+			dragIndex === undefined ||
+			hitList === undefined ||
+			hitIndex === undefined
+		)
+			return;
+
+		// Inter-list self collision
+		if (drag.element.id === hit.element.id) {
+			const hitList = hit.element.parentElement;
+			if (hitList === null || $dragging === false) return;
+
+			// Remove drag from store
+			dragList.store.update((store) => {
+				store.splice(dragIndex, 1);
+				return store;
+			});
+
+			$dragging.element.dataset['group_uid'] = hitList.dataset['group_uid'];
+			$dragging.element.dataset['inner'] = hitList.dataset['inner'];
+			$dragging.element.dataset['targets'] = hitList.dataset['targets'];
+
+			dragging.onDrop(undefined);
+		}
+		// Same list collision
+		else if (drag.group_uid === hit.group_uid) {
+			dragList.store.update((store) => {
+				const temp = store[dragIndex];
+
+				store[dragIndex] = store[hitIndex];
+				store[hitIndex] = temp;
+
+				return store;
+			});
+		}
+		// Inter-list collision
+		else {
+			dragList.store.update((store) => {
+				const temp = store[dragIndex];
+
+				dragging.drop();
+				dragging.onDrop(() => {
+					dragList.store.update((store) => {
+						store.splice(dragIndex, 1);
+						return store;
+					});
+				});
+
+				hitList.store.update((store) => {
+					if ($dragging === false) return store;
+					$dragging.element.dataset['group_uid'] = hit.element.dataset['group_uid'];
+					$dragging.element.dataset['inner'] = hit.element.dataset['inner'];
+					$dragging.element.dataset['targets'] = hit.element.dataset['targets'];
+
+					store.splice(hitIndex, 0, temp);
+					return store;
+				});
+
+				return store;
+			});
+		}
+	};
 
 	onMount(() => {
 		const move = (e: TouchEvent | DragEvent) => {

@@ -8,17 +8,37 @@
 
 	export let inner = true;
 	export let targets: string[] = [];
+
+	export let remove: (target: HTMLElement) => void = () => {};
+
+	function bind(el: HTMLElement) {
+		// bind remove function
+		el.querySelector('button[name="delete"]')?.addEventListener('click', () => {
+			remove(el);
+		});
+
+		// bind drag function
+		const dragHandle = el.querySelector('button[name="drag"]');
+		if (dragHandle !== null)
+			dragHandle.addEventListener('touchstart', (e) => {
+				start(e as TouchEvent, el);
+			});
+		else
+			el.addEventListener('touchstart', (e) => {
+				start(e as TouchEvent, el);
+			});
+	}
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
+	use:bind
 	class={draggableClassName}
 	id={uid}
 	data-group_uid={group_uid}
 	data-inner={inner}
 	data-targets={targets}
 	on:dragstart={start}
-	on:touchstart={start}
 	on:drag={drag}
 	on:touchmove={drag}
 	on:dragend={end}
@@ -31,6 +51,12 @@
 
 		if ($dragging.targets.find((target) => target.id === id || dragging_id === id))
 			e.preventDefault();
+	}}
+	on:contextmenu|preventDefault={(e) => {
+		const target = e.currentTarget;
+		if (target === null) return;
+
+		remove(target);
 	}}
 	draggable="true"
 	style="opacity: {$dragging && $dragging.element.id === uid
