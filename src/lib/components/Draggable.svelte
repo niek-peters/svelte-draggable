@@ -35,6 +35,8 @@
 		const deleteHandle = el.querySelector('button[name="delete"]');
 		if (deleteHandle === null)
 			el.addEventListener('contextmenu', (e) => {
+				e.preventDefault();
+
 				const target = e.currentTarget as HTMLElement;
 				if (target === null) return;
 
@@ -64,12 +66,6 @@
 
 		if ($dragging.targets.find((target) => target.id === id || dragging_id === id))
 			e.preventDefault();
-	}}
-	on:contextmenu|preventDefault={(e) => {
-		const target = e.currentTarget;
-		if (target === null) return;
-
-		remove(target);
 	}}
 	draggable="true"
 	style="opacity: {$dragging && $dragging.element.id === uid ? 0 : 100};"
