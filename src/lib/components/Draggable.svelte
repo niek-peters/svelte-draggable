@@ -59,9 +59,7 @@
 		remove(target);
 	}}
 	draggable="true"
-	style="opacity: {$dragging && $dragging.element.id === uid
-		? 0
-		: 100}; touch-action: none;"
+	style="opacity: {$dragging && $dragging.element.id === uid ? 0 : 100}; touch-action: none;"
 >
 	<slot />
 </div>

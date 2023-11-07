@@ -15,6 +15,8 @@
 	export let inner = true;
 	export let targets: string[] = [];
 
+	export let _this: HTMLDivElement | undefined = undefined;
+
 	function remove(target: HTMLElement) {
 		const id = target.id;
 		const group_uid = target.dataset['group_uid'];
@@ -32,6 +34,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
+	bind:this={_this}
 	id={uid}
 	class="{dragListClassName} {listClass}"
 	style={listStyle}

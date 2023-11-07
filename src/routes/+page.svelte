@@ -1,7 +1,11 @@
 <script lang="ts">
 	import '../app.css';
 	import { writable } from 'svelte/store';
-	import { DragList, DragRoot, dragging, newList } from '$lib';
+	import { DragList, DragRoot, dragging, isDragged, newList } from '$lib';
+
+	// TODO
+	// Add ability to bind:this to DragList
+	// Add dragClass and dragStyle props to DragList
 
 	const list1 = newList(
 		'bist',
@@ -20,13 +24,22 @@
 			{ uid: crypto.randomUUID(), name: 'best3' }
 		])
 	);
+
+	let list1El: HTMLDivElement | undefined;
 </script>
 
 <main class="flex gap-16">
-	<DragList listClass="flex flex-col" let:index list={list1} targets={['bist2']}>
+	<DragList
+		listClass="flex flex-col"
+		let:index
+		list={list1}
+		targets={['bist2']}
+		bind:_this={list1El}
+	>
 		{@const entry = list1.get(index)}
+		{@const dragged = isDragged(entry)}
 		<div
-			class="bg-gray-200 w-16 {!$dragging
+			class="{!dragged ? 'bg-gray-200' : 'bg-gray-300'} w-16 {!$dragging
 				? 'hover:bg-gray-300'
 				: ''} transition p-2 rounded-sm w-full"
 		>

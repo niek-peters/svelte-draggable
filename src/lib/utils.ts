@@ -107,3 +107,8 @@ function stopScrolling() {
 		return store;
 	});
 }
+
+export function isDragged(entry: object & { uid: string }) {
+	const store = get(dragging);
+	return store ? entry.uid === store.element.id : false;
+}
