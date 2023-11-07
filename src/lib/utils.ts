@@ -3,8 +3,6 @@ import { get } from 'svelte/store';
 import { dragging } from '$lib/stores/dragging';
 
 export function start(e: DragEvent | TouchEvent, el?: HTMLElement) {
-	console.log('start')
-
 	if (e instanceof DragEvent) {
 		const canvas = document.createElement('canvas');
 
@@ -24,8 +22,6 @@ export function start(e: DragEvent | TouchEvent, el?: HTMLElement) {
 let lastMousePos = { x: 0, y: 0 };
 
 export function drag(e: DragEvent | TouchEvent) {
-	console.log('drag')
-
 	dragging.update((store) => {
 		if (!store) return store;
 
@@ -69,8 +65,6 @@ export function drag(e: DragEvent | TouchEvent) {
 }
 
 export function end() {
-	console.log('end')
-
 	dragging.drop();
 	dragging.set(false);
 

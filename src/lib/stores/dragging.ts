@@ -62,21 +62,6 @@ export const dragging = (() => {
 				}
 			}
 
-			// targets = targets.filter((target) => target.id !== element.id);
-
-			// const dragStyle = element.dataset['dragStyle'];
-			// const dragClass = element.dataset['dragClass'];
-
-			// console.log(dragClass)
-
-			// for (const child of element.children) {
-			// 	if (dragStyle !== undefined)
-			// 		(child as HTMLElement).style.cssText += dragStyle;
-			// 	if (dragClass !== undefined)
-			// 		for (const className of dragClass.split(' '))
-			// 			child.classList.add(className);
-			// }
-
 			store.set({
 				element,
 				dimensions: {
