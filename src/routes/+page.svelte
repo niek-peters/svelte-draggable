@@ -21,6 +21,28 @@
 		writable([
 			{ uid: crypto.randomUUID(), name: 'best1' },
 			{ uid: crypto.randomUUID(), name: 'best2' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
+			{ uid: crypto.randomUUID(), name: 'best3' },
 			{ uid: crypto.randomUUID(), name: 'best3' }
 		])
 	);
@@ -47,9 +69,16 @@
 		</div>
 	</DragList>
 
-	<DragList listClass="flex flex-col w-36 bg-yellow-300" let:index list={list2} targets={['bist']}>
+	<DragList
+		listClass="flex flex-col h-[110vh] w-1/2 bg-yellow-300"
+		let:index
+		list={list2}
+		targets={['bist']}
+	>
 		{@const entry = list2.get(index)}
-		<div class="bg-gray-200 w-24 {!$dragging ? 'hover:bg-gray-300' : ''} transition p-2 rounded-sm">
+		<div
+			class="bg-gray-200 w-full {!$dragging ? 'hover:bg-gray-300' : ''} transition p-2 rounded-sm"
+		>
 			<button class="md:hidden" name="delete">del</button>
 			<button class="md:hidden bg-yellow-200" name="drag">drag</button>
 			<p>{entry.name}</p>

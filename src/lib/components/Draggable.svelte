@@ -23,10 +23,13 @@
 			dragHandle.addEventListener('touchstart', (e) => {
 				start(e as TouchEvent, el);
 			});
-		else
+		else {
+			el.style.cssText += 'touch-action: none;';
+
 			el.addEventListener('touchstart', (e) => {
 				start(e as TouchEvent, el);
 			});
+		}
 	}
 </script>
 
@@ -59,7 +62,7 @@
 		remove(target);
 	}}
 	draggable="true"
-	style="opacity: {$dragging && $dragging.element.id === uid ? 0 : 100}; touch-action: none;"
+	style="opacity: {$dragging && $dragging.element.id === uid ? 0 : 100};"
 >
 	<slot />
 </div>
