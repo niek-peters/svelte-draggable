@@ -30,6 +30,16 @@
 				start(e as TouchEvent, el);
 			});
 		}
+
+		// bind contextmenu function
+		const deleteHandle = el.querySelector('button[name="delete"]');
+		if (deleteHandle === null)
+			el.addEventListener('contextmenu', (e) => {
+				const target = e.currentTarget as HTMLElement;
+				if (target === null) return;
+
+				remove(target);
+			});
 	}
 </script>
 
