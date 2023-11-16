@@ -80,8 +80,10 @@
 			dragList.store.update((store) => {
 				const temp = store[dragIndex];
 
-				store[dragIndex] = store[hitIndex];
-				store[hitIndex] = temp;
+				// store[dragIndex] = store[hitIndex];
+				// store[hitIndex] = temp;
+				store.splice(dragIndex, 1);
+				store.splice(hitIndex, 0, temp);
 
 				return store;
 			});
